@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+
+{% set title = "index page ^_^" %}
+
+{% block content %}
+    <ul>
+        {% for node in nodes %}
+        <li><a href="{{ url('node_detail', node_id=node['id']) }}">{{ node['name'] }}</a></li>
+        {% endfor %}
+    </ul>
+{% endblock %}

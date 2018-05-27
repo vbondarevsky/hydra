@@ -1,1 +1,1 @@
-# hydra
+# Hydra agents management center
