@@ -11,16 +11,16 @@
 
         <p>Infobases<span class="badge badge-light">9</span></p>
         {% for cluster in clusters %}
-        <ul>
-            <li>{{ cluster['name'] }}</li>
-            <li>
             <ul>
-            {% for infobase in cluster['infobases'] %}
-                <li>{{ infobase['name'] }}</li>
-            {% endfor %}
+                <li>{{ cluster['name'] }}</li>
+                <li>
+                    <ul>
+                        {% for infobase in cluster['infobases'] %}
+                            <li>{{ infobase['name'] }}</li>
+                        {% endfor %}
+                    </ul>
+                </li>
             </ul>
-            </li>
-        </ul>
         {% endfor %}
     </form>
 {% endblock %}
