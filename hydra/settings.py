@@ -1,15 +1,16 @@
+import os.path
 import pathlib
 
 import yaml
 
 BASE_DIR = pathlib.Path(__file__).parent.parent
-config_path = BASE_DIR / "etc" / "hydra.yml"
+config_path = os.path.join(BASE_DIR, "etc", "hydra.yml")
 
 
-def get_config(path):
+def get_settings(path):
     with open(path) as f:
-        config = yaml.load(f)
-    return config
+        settings = yaml.load(f)
+    return settings
 
 
-config = get_config(config_path)
+settings = get_settings(config_path)

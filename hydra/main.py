@@ -1,14 +1,15 @@
 import aiohttp.web
-import aiohttp_jinja2
-import jinja2
 
 from hydra.routes import setup_routes
-from hydra.settings import config
+from hydra.settings import settings
 
-app = aiohttp.web.Application(debug=config["debug"])
 
-aiohttp_jinja2.setup(app, loader=jinja2.PackageLoader("hydra", "templates"))
+def run_server():
+    app = aiohttp.web.Application(debug=settings["debug"])
+    app["settings"] = settings
+    setup_routes(app)
+    aiohttp.web.run_app(app, host=settings["host"], port=settings["port"])
 
-setup_routes(app)
-app["config"] = config
-aiohttp.web.run_app(app, host=config["host"], port=config["port"])
+
+if __name__ == "__main__":
+    run_server()

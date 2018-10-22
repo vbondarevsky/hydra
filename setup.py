@@ -3,31 +3,26 @@ import os
 
 from setuptools import find_packages, setup
 
-NAME = "HYDRA"
+NAME = "hydra"
 here = os.path.abspath(os.path.dirname(__file__))
 
 about = {}
 with open(os.path.join(here, NAME, "__version__.py")) as f:
     exec(f.read(), about)
 
-with io.open(os.path.join(here, "README.rst"), encoding="utf-8") as f:
-    long_description = "\n" + f.read()
 
 setup(
     name=NAME,
     version=about[NAME],
     description="Hydra agents management center",
-    long_description=long_description,
     author="Vladimir Bondarevskiy",
     author_email="vbondarevsky@gmail.com",
     url="https://github.com/vbondarevsky/hydra",
     license="https://www.gnu.org/licenses/gpl-3.0",
-    packages=find_packages(exclude=["tests", "tests.*"]),
+    packages=find_packages(exclude=["tests", "tests.*", "front"]),
     python_requires=">=3",
     install_requires=[
         "aiohttp",
-        "aiohttp_jinja2",
-        "jinja2",
         "pyyaml",
         "SQLAlchemy",
     ],
