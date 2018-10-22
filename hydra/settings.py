@@ -3,6 +3,7 @@ import pathlib
 
 import yaml
 
+
 BASE_DIR = pathlib.Path(__file__).parent.parent
 config_path = os.path.join(BASE_DIR, "etc", "hydra.yml")
 
