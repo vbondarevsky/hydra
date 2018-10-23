@@ -1,6 +1,6 @@
 import pathlib
 
-from hydra.handler.node import NodeHandler
+from hydra.handler import NodeHandler
 
 PROJECT_ROOT = pathlib.Path(__file__).parent
 
