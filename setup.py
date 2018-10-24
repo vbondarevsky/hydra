@@ -1,7 +1,7 @@
-import io
 import os
 
-from setuptools import find_packages, setup
+from setuptools import find_packages
+from setuptools import setup
 
 NAME = "hydra"
 here = os.path.abspath(os.path.dirname(__file__))
@@ -9,7 +9,6 @@ here = os.path.abspath(os.path.dirname(__file__))
 about = {}
 with open(os.path.join(here, NAME, "__version__.py")) as f:
     exec(f.read(), about)
-
 
 setup(
     name=NAME,
@@ -22,7 +21,7 @@ setup(
     packages=find_packages(exclude=["tests", "tests.*", "front"]),
     python_requires=">=3",
     install_requires=[
-        "aiohttp",
+        "aiohttp>=3.4.4",
         "pyyaml",
         "SQLAlchemy",
     ],

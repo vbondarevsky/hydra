@@ -1,8 +1,10 @@
 <template>
     <div class="about">
+        <button @click="getNodeStatus(1)">Получить статус</button>
+        <p>{{ status }}</p>
         <table border="1">
             <thead>
-            <button>Добавить</button>
+            <button @click="createNode({name: 'test_node', host: 'localhost', port: 8080})">Добавить</button>
             <tr>
                 <th>id</th>
                 <th>name</th>
@@ -31,12 +33,14 @@
         methods: {
             ...mapActions([
                 'createNode',
-                'deleteNode'
+                'deleteNode',
+                'getNodeStatus',
             ])
         },
         computed: {
             ...mapGetters([
-                'nodes'
+                'nodes',
+                'status',
             ])
         },
         created() {
