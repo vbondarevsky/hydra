@@ -1,28 +1,46 @@
 <template>
-  <div class="about">
-    <h1>This is an about page</h1>
-
-
-  <ul>
-    <li v-for="node in nodes" :key="node.id">
-      {{ node }}
-    </li>
-  </ul>
-
-  </div>
+    <div class="about">
+        <table border="1">
+            <thead>
+            <button>Добавить</button>
+            <tr>
+                <th>id</th>
+                <th>name</th>
+                <th>host</th>
+                <th>port</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr v-for="node in nodes">
+                <td>{{node.id}}</td>
+                <td>{{node.name}}</td>
+                <td>{{node.host}}</td>
+                <td>{{node.port}}</td>
+                <td><span @click="">edit</span></td>
+                <td><span @click="deleteNode(node.id)">del</span></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
 </template>
 
 <script>
-  import { mapState } from 'vuex'
+    import {mapGetters, mapActions} from 'vuex'
 
-  export default {
-      mounted() {
-          this.$store.dispatch('loadNodes')
-      },
-      computed: {
-          ...mapState([
-              'nodes'
-          ])
-      }
-  }
+    export default {
+        methods: {
+            ...mapActions([
+                'createNode',
+                'deleteNode'
+            ])
+        },
+        computed: {
+            ...mapGetters([
+                'nodes'
+            ])
+        },
+        created() {
+            this.$store.dispatch('getNodes')
+        }
+    }
 </script>

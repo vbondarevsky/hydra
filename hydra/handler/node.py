@@ -12,6 +12,8 @@ class NodeHandler(BaseHandler):
             aiohttp.web.get(self.build_route("/nodes/{node_id}"), self.read),
             aiohttp.web.put(self.build_route("/nodes/{node_id}"), self.update),
             aiohttp.web.delete(self.build_route("/nodes/{node_id}"), self.delete),
+            # TODO: временно или нет?
+            aiohttp.web.view(self.build_route("/nodes/{node_id}"), self.options),
         ]
 
     async def create(self, request):
@@ -27,7 +29,11 @@ class NodeHandler(BaseHandler):
         pass
 
     async def delete(self, request):
-        pass
+        return aiohttp.web.json_response({}, headers={'Access-Control-Allow-Origin': '*'})
+
+    async def options(self, request):
+        return aiohttp.web.json_response({}, headers={'Access-Control-Allow-Origin': '*',
+                                                      'Access-Control-Allow-Methods': '*'})
 
 
 def get_node(node_id):
