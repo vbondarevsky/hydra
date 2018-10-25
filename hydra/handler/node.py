@@ -1,5 +1,6 @@
 import aiohttp.web
 
+from hydra.db.models import Node
 from hydra.handler.base_handler import BaseHandler
 
 
@@ -22,12 +23,18 @@ class NodeHandler(BaseHandler):
         ]
 
     async def create(self, request):
-        return aiohttp.web.json_response({"id": 6, "name": "test_node", "host": "localhost", "port": 8080},
-                                         headers={'Access-Control-Allow-Origin': '*'}, status=201)
+        node = await request.json()
+
+        new_node = Node(**node, user="", password="")
+        request.app["db"].add(new_node)
+        request.app["db"].commit()
+        return aiohttp.web.json_response({"id": new_node.id, "name": new_node.name, "url": new_node.url},
+                                         headers={'Access-Control-Allow-Origin': '*'},
+                                         status=201)
 
     async def read(self, request):
         node_id = request.match_info.get('node_id', None)
-        data = get_node(node_id)
+        data = get_node(request.app["db"], node_id)
         # TODO: Заголовок нужен, чтобы разрабатывать можно было, запуская фронт и бек на разных портах
         return aiohttp.web.json_response(data, headers={'Access-Control-Allow-Origin': '*'})
 
@@ -39,7 +46,9 @@ class NodeHandler(BaseHandler):
 
     async def get_status(self, request):
         async with aiohttp.ClientSession() as session:
-            async with session.get('http://localhost:9523/hydra_agent/api/v1/heartbeat', verify_ssl=False) as resp:
+            node_id = request.match_info.get('node_id', None)
+            url = request.app["db"].query(Node).filter_by(id=node_id).first().url
+            async with session.get(f"{url}/api/v1/heartbeat", verify_ssl=False) as resp:
                 return aiohttp.web.json_response(await resp.json(), headers={'Access-Control-Allow-Origin': '*'})
 
     async def options(self, request):
@@ -51,14 +60,13 @@ class NodeHandler(BaseHandler):
         })
 
 
-def get_node(node_id):
+def get_node(db_session, node_id):
     if node_id:
-        return {"id": 1, "name": "test_node", "host": "localhost", "port": 8080}
+        node = db_session.query(Node).filter_by(id=node_id).first()
+        return {"id": node.id, "name": node.name, "url": node.url}
     else:
-        return [
-            {"id": 1, "name": "test_node", "host": "localhost", "port": 8080},
-            {"id": 2, "name": "test_node", "host": "localhost", "port": 8080},
-            {"id": 3, "name": "test_node", "host": "localhost", "port": 8080},
-            {"id": 4, "name": "test_node", "host": "localhost", "port": 8080},
-            {"id": 5, "name": "test_node", "host": "localhost", "port": 8080},
-        ]
+        nodes = db_session.query(Node).all()
+        result = []
+        for node in nodes:
+            result.append({"id": node.id, "name": node.name, "url": node.url})
+        return result

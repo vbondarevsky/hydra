@@ -1,25 +1,28 @@
 <template>
     <div class="about">
-        <button @click="getNodeStatus(1)">Получить статус</button>
-        <p>{{ status }}</p>
+        <label for="name">Name</label><input type="text" id="name" v-model="name">
+        <label for="url">URL</label><input type="text" id="url" v-model="url">
+        <button @click="addNode">Добавить</button>
+        <p>Name: {{ name }}, ULR: {{ url }}</p>
+
         <table border="1">
             <thead>
-            <button @click="createNode({name: 'test_node', host: 'localhost', port: 8080})">Добавить</button>
+
             <tr>
                 <th>id</th>
                 <th>name</th>
-                <th>host</th>
-                <th>port</th>
+                <th>url</th>
             </tr>
             </thead>
             <tbody>
             <tr v-for="node in nodes">
                 <td>{{node.id}}</td>
                 <td>{{node.name}}</td>
-                <td>{{node.host}}</td>
-                <td>{{node.port}}</td>
+                <td>{{node.url}}</td>
                 <td><span @click="">edit</span></td>
                 <td><span @click="deleteNode(node.id)">del</span></td>
+                <td><span @click="getNodeStatus(node.id)">status</span></td>
+                <td>{{node.status}}</td>
             </tr>
             </tbody>
         </table>
@@ -27,15 +30,24 @@
 </template>
 
 <script>
-    import {mapGetters, mapActions} from 'vuex'
+    import {mapActions, mapGetters} from 'vuex'
 
     export default {
+        data() {
+            return {
+                name: "",
+                url: ""
+            }
+        },
         methods: {
             ...mapActions([
                 'createNode',
                 'deleteNode',
                 'getNodeStatus',
-            ])
+            ]),
+            addNode() {
+                this.createNode({name: this.name, url: this.url})
+            }
         },
         computed: {
             ...mapGetters([

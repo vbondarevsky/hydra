@@ -32,7 +32,7 @@ export default new Vuex.Store({
         },
         getNodeStatus: async ({commit}, node_id) => {
             const {data: response} = await Api().get(`/nodes/${node_id}/status`)
-            commit('updateNodeStatus', response)
+            commit('updateNodeStatus', {id: node_id, status: response})
         }
     },
     mutations: {
@@ -48,8 +48,15 @@ export default new Vuex.Store({
         updateNode: (state, node) => {
             state.nodes = state.nodes.map(old => (old.id === node.id ? node : old));
         },
-        updateNodeStatus: (state, status) => {
-            state.status = status;
+        updateNodeStatus: (state, node) => {
+            console.log(node.status)
+            state.nodes.forEach(item => {
+                if (item.id === node.id) {
+                    console.log(item)
+                    item.status = node.status
+                }
+            })
+            state.nodes = state.nodes.slice() // TODO: bad code
         },
     },
     getters: {
