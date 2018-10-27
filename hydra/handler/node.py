@@ -42,7 +42,10 @@ class NodeHandler(BaseHandler):
         pass
 
     async def delete(self, request):
-        return aiohttp.web.json_response({}, headers={'Access-Control-Allow-Origin': '*'})
+        node_id = request.match_info.get("node_id", None)
+        request.app["db"].delete(request.app["db"].query(Node).filter_by(id=node_id).first())
+        request.app["db"].commit()
+        return aiohttp.web.json_response({}, headers={'Access-Control-Allow-Origin': '*'}, status=204)
 
     async def get_status(self, request):
         async with aiohttp.ClientSession() as session:
