@@ -7,20 +7,45 @@ from sqlalchemy.ext.declarative import declarative_base
 Base = declarative_base()
 
 
-class Node(Base):
+class DictMixin:
+    def dict(self):
+        return dict((col, getattr(self, col)) for col in self.__table__.columns.keys())
+
+
+class Node(Base, DictMixin):
     __tablename__ = "node"
 
     id = Column(Integer, Sequence("user_id_seq"), primary_key=True)
     name = Column(String(150), nullable=False)
     url = Column(String(1024), nullable=False)
-    user = Column(String(100), nullable=False)
-    password = Column(String(100), nullable=False)
 
-    def __init__(self, name, url, user, password):
+    def __init__(self, name, url):
         self.name = name
         self.url = url
-        self.user = user
-        self.password = password
 
     def __repr__(self):
         return f"<Node({self.id}, {self.name}, {self.url})>"
+
+    @staticmethod
+    def add(db, node):
+        new_node = Node(**node)
+        db.add(new_node)
+        db.commit()
+        return new_node.dict()
+
+    @staticmethod
+    def remove(db, node_id):
+        node = db.query(Node).filter_by(id=node_id).first()
+        db.delete(node)
+        db.commit()
+
+    @staticmethod
+    def read(db, node_id=None):
+        if node_id:
+            return db.query(Node).filter_by(id=node_id).first().dict()
+        else:
+            return [node.dict() for node in db.query(Node).all()]
+
+    @staticmethod
+    def update(db, node):
+        pass
