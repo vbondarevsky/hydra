@@ -48,4 +48,8 @@ class Node(Base, DictMixin):
 
     @staticmethod
     def update(db, node):
-        pass
+        updated_node = db.query(Node).filter_by(id=node["id"]).first()
+        updated_node.name = node["name"]
+        updated_node.url = node["url"]
+        db.commit()
+        return updated_node.dict()

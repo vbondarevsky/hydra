@@ -19,7 +19,7 @@
                 <td>{{node.id}}</td>
                 <td>{{node.name}}</td>
                 <td>{{node.url}}</td>
-                <td><span @click="">edit</span></td>
+                <td><span @click="updateNode({id: node.id, name: name, url: url})">update</span></td>
                 <td><span @click="deleteNode(node.id)">del</span></td>
                 <td><span @click="getNodeStatus(node.id)">status</span></td>
                 <td>{{node.status}}</td>
@@ -44,6 +44,7 @@
                 'createNode',
                 'deleteNode',
                 'getNodeStatus',
+                'updateNode'
             ]),
             addNode() {
                 this.createNode({name: this.name, url: this.url})
